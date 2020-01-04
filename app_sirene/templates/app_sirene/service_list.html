@@ -1,0 +1,38 @@
+{% extends "app_sirene/base_nosidebar.html" %}
+{% block content %}
+
+<!-- <a href="{% url 'app_sirene:home' %}">
+<button type="button" class="btn btn-success btn-sm"> << RETOUR </button>
+</a> -->
+
+<p>
+<h5>Applications / Services SI</h5>
+<br>
+
+{% if services %}
+<table class="table table-light table-hover table-striped table-bordered table-sm table-condensed">
+    <thead class="thead-dark">
+      <tr>
+        <th class="text-center">id</th>
+        <th>Nom court</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    {% for line in services %}
+    <tr>
+        <td class="text-center">{{ line.id }}</td>
+        <td class="text-left">{{ line.name }}</td>
+        <td class="text-left">{{ line.description }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% else %}
+    <p>Pas de services.</p>
+{% endif %}
+
+{%endblock%}
+

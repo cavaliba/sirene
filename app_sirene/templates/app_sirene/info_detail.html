@@ -1,0 +1,188 @@
+{% extends "app_sirene/base_nosidebar.html" %}
+{% block content %}
+
+<!-- <a href="{% url 'app_sirene:home' %}">
+<button type="button" class="btn btn-success btn-sm"> << RETOUR </button>
+</a>
+-->
+
+<p> 
+<h4 class="text-primary">Détails</h4>
+<p>
+
+{% if info %}
+
+<div class="container border rounded">
+
+
+<div class="row">
+    <div class="col col-sm-2 text-right font-weight-bold">
+    Titre :
+    </div>
+    <div class="col col-sm-10">
+    {{ info.title }}
+    </div>
+</div>    
+
+<div class="row">
+    <div class="col col-sm-2 text-right font-weight-bold">
+    Statut :
+    </div>
+    <div class="col col-sm-10">
+    {{ info.get_status_display }}
+    </div>
+</div>    
+
+<div class="row">
+    <div class="col col-sm-2 text-right font-weight-bold">
+    Priorité :
+    </div>
+    <div class="col col-sm-10">
+    {{ info.get_priority_display }}
+    </div>
+</div>
+
+<hr>
+
+<div class="row">
+    <div class="col col-sm-2 text-right font-weight-bold">
+    Début :
+    </div>
+    <div class="col col-sm-10">
+    {{ info.start|date:"Y/m/d H:i:s" }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col col-sm-2 text-right font-weight-bold">
+    Durée estimée :
+    </div>
+    <div class="col col-sm-10">
+    {{ info.duration }} (minutes)
+    </div>
+</div>
+
+<div class="row">
+    <div class="col col-sm-2 text-right font-weight-bold">
+    Indisponibilité :
+    </div>
+    <div class="col col-sm-10">
+    {{ info.downtime }} (minutes)
+    </div>
+</div>
+
+<hr>
+
+<div class="row">
+    <div class="col col-sm-2 text-right font-weight-bold">
+    Description :
+    </div>
+    <div class="col col-sm-10">
+    <pre>{{ info.detail }}</pre>
+    </div>
+</div>
+
+<hr>
+
+
+<div class="row">
+    <div class="col col-sm-2 text-right font-weight-bold">
+    Services SI :
+    </div>
+    <div class="col col-sm-10">
+        {% for item in info.services.all %}
+        {{ item.name}} ({{ item.description }} )<br>
+        {% endfor %}
+    </div>
+</div>
+
+<hr>
+
+<div class="row">
+    <div class="col col-sm-2 text-right font-weight-bold">
+    Sites :
+    </div>
+    <div class="col col-sm-10">
+        {% for item in info.sites.all %}
+        {{ item.name}} ({{ item.description }} )<br>
+        {% endfor %}
+    </div>
+</div>
+
+<hr>
+
+<div class="row">
+    <div class="col col-sm-2 text-right font-weight-bold">
+    notification email :
+    </div>
+    <div class="col col-sm-10">
+        {{ info.send_email|yesno:"Oui,Non" }} <br>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col col-sm-2 text-right font-weight-bold">
+    notification sms :
+    </div>
+    <div class="col col-sm-10">
+        {{ info.send_sms|yesno:"Oui,Non" }} <br>
+    </div>
+</div>
+
+<hr>
+
+<div class="row">
+    <div class="col col-sm-2 text-right font-weight-bold">
+    Auteur :
+    </div>
+    <div class="col col-sm-10">
+        {{ info.author }} <br>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col col-sm-2 text-right font-weight-bold">
+    Modèle :
+    </div>
+    <div class="col col-sm-10">
+        {{ info.template_name }} <br>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col col-sm-2 text-right font-weight-bold">
+    Création :
+    </div>
+    <div class="col col-sm-10">
+        {{ info.created_on|date:"Y/m/d H:i:s" }} <br>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col col-sm-2 text-right font-weight-bold">
+    Mise à jour :
+    </div>
+    <div class="col col-sm-10">
+        {{ info.updated_on|date:"Y/m/d H:i:s" }} <br>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+</div>    
+
+
+
+{% else %}
+    <p>Non disponible.</p>
+{% endif %}
+
+{%endblock%}
+

@@ -1,0 +1,54 @@
+body {
+  font-size: .875rem;
+}
+
+.container-fluid {
+   padding: 5px;
+   padding-top: 5px;
+}
+
+#main {
+    padding-top: 60px;
+}
+
+.sidebar-heading {
+  font-size: .75rem;
+  text-transform: uppercase;
+}
+
+.nav-link {
+  font-weight: 500;
+  color: #666;
+}
+
+.cavaliba_sidebar {
+padding-left: 10px;
+#background-color: #000;
+}
+
+a {
+    color: inherit;
+}
+
+.table-condensed{
+  font-size: 12px;
+}
+
+label {
+  width:200px;
+  display: inline-block;
+}
+
+
+.myjumbo {
+  background-image:url(/static/jumbo.jpg); 
+  background-repeat: no-repeat; 
+  background-size: cover; 
+  color: white
+}
+
+.helptext {
+ font-size: 0.6rem;
+ color: #00F;
+ font-style: italic;
+}

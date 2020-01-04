@@ -1,0 +1,129 @@
+INSTALL CAVALIBA SIRENE
+=======================
+(c) Cavaliba 2020
+
+
+---------------------------------------------------------------------
+Pre-requisite
+---------------------------------------------------------------------
+
+For tests/evaluation purposes : 
+
+* Python 3.X with Django 3.X Web Framework
+* mariadb/mysql
+
+For production / regular usage, add :
+* apache2 or nginx
+* gunicorn
+* supervisord
+
+Additionnal tools [optional]
+* Mysql Workbench
+* virtualenv
+
+---------------------------------------------------------------------
+Configure Mysql/MariaDB database
+---------------------------------------------------------------------
+
+mysql -u root -p
+
+CREATE DATABASE cavaliba_sirene CHARACTER SET utf8 COLLATE utf8_bin;
+grant all privileges on cavaliba_sirene.* to cavaliba_sirene@% identified by 'xxxxxxxx';
+FLUSH PRIVILEGES;
+
+SELECT User,Host FROM mysql.user;
+SHOW GRANTS FOR 'cavaliba_sirene'@'%';
+
+---------------------------------------------------------------------
+Get Cavaliba Sirene
+---------------------------------------------------------------------
+
+git clone github://xxxxxxxxxxxxx/cavaliba_sirene.git /var/www/cavaliba_sirene
+
+---------------------------------------------------------------------
+Configure Cavaliba Sirene
+---------------------------------------------------------------------
+
+cd /var/www/cavaliba_sirene
+
+cp cavaliba/settings.py.original cavaliba/settings.py
+
+vi cavaliba/settings.py :
+
+SECRET_KEY = " <insert a long random string> "
+CAVALIBA_DBPWD = XXXXXXX    (or use OS.environ variable, see below)
+ALLOWED_HOSTS = ['127.0.0.1','localhost']
+DEBUG = False    (True for Local tests / non production usage)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'cavaliba_sirene',
+        'USER': 'cavaliba_sirene',
+        #'PASSWORD': os.environ.get('CAVALIBA_DBPWD') ,
+        #'PASSWORD': 'xxxxxxxxxxxxxxx' ,
+        'HOST': 'localhost',
+        'PORT': '3306',
+    }
+}
+STATIC_ROOT = /var/www/html/static/
+
+EMAIL SMTP SERVER
+SMS SERVER / API
+
+# Set env variable if needed (if no static password in settings.py)
+export CAVALIBA_DBPWD=xxx
+
+# If needed, make it permanent with vi ~./bashrc
+export CAVALIBA_DBPWD=xxx
+
+# Create DB Tables and initial data
+python3 manage.py makemigrations
+python3 manage.py migrate
+
+# if using apache/nginx , collect static assets (css,js,image) to target dir
+# not needed if settings.DEBUG = True
+python3 manage.py collectstatic
+
+# Create Django superadmin
+python3 manage.py createsuperuser
+
+# Load Demo Data if needed
+
+
+---------------------------------------------------------------------
+First start - manual / direct (no web server)
+---------------------------------------------------------------------
+
+# First local start -  insecure means : serves static files directly
+python3 manage.py runserver --insecure
+   => http://127.0.0.1:8000
+
+# Start manuall with wsgi interface
+gunicorn ........
+
+
+---------------------------------------------------------------------
+Cavaliba Sirene Admin
+---------------------------------------------------------------------
+
+---------------------------------------------------------------------
+Create Cavaliba Sirene Users
+---------------------------------------------------------------------
+
+
+---------------------------------------------------------------------
+Configure Web Server and Auto Start
+---------------------------------------------------------------------
+settings.py
+DEBUG = False
+
+virtual host
+gunicorn
+supervisord
+
+---------------------------------------------------------------------
+Start/Stop/Logfiles/Purge Data/Security
+---------------------------------------------------------------------
+
+
+

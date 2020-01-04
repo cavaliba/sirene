@@ -1,0 +1,41 @@
+
+<table class="table table-light table-hover table-striped table-bordered table-sm table-condensed">
+
+    <thead class="thead-light">
+      <tr>
+        <th>Titre</th>
+        <th>Date de publication</th>
+        <th>Auteur</th>
+      </tr>
+    </thead>
+
+    <tbody>
+    {% for line in announces %}
+    <tr>
+
+      {% if user.is_authenticated %} 
+      <td> 
+        <a href="{% url 'app_sirene:info_detail' pk=line.id %}">
+        <i class="fas fa-bullhorn"></i> &nbsp; 
+        </a>
+        <a href="{% url 'app_sirene:info_edit' pk=line.id %}">
+        <i class="fas fa-pencil-alt"></i> &nbsp; 
+        <b>{{ line.title }}</b>
+        </a>
+      </td>
+      {% else %}
+      <td>
+        <a href="{% url 'app_sirene:info_detail' pk=line.id %}">
+        <i class="fas fa-bullhorn"></i> &nbsp; 
+        <b>{{ line.title }}</b>
+        </a>
+      </td>
+      {% endif %}
+
+      </td>
+      <td>{{ line.start|date:"Y/m/d H:i:s" }}</td>
+      <td>{{ line.author }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>

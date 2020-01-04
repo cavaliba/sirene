@@ -1,0 +1,112 @@
+{% load static %}  
+
+{% block navbar %}
+<!--  NAVBAR 2 CUSTOM -->
+
+<nav class="navbar navbar-light fixed-top bg-light flex-md-nowrap p-0 shadow navbar-expand-sm">
+
+<!-- <nav class="navbar navbar-expand-md flex-md-nowrap navbar-dark bg-dark shadow" id="mainNav">
+ -->
+ <a class="navbar-brand" href="/">
+  &nbsp; <img src="{% static 'logo_transparent.png' %}" alt="LOGO" style="height:40px;">
+</a>
+
+<a class="navbar-brand" href="{% url 'app_sirene:home' %}">
+  &nbsp; SIRENE
+</a>
+
+
+<button class="navbar-toggler" type="button" data-toggle="collapse"  data-target="#mynavbar">
+  <span class="navbar-toggler-icon"></span>
+</button>
+   
+<div class="collapse navbar-collapse" id="mynavbar">
+
+{% if user.is_authenticated %} 
+
+  <ul class="navbar-nav ml-left">
+  
+
+    <li class="nav-item font-weight-bold"><a class="nav-link" href="{% url 'app_sirene:template_list' %}">
+    Nouveau(via Modèle)</a></li>
+
+    <li class="nav-item font-weight-bold"><a class="nav-link" href="{% url 'app_sirene:info_new' %}">
+    Nouveau</a></li>
+
+    <li class="nav-item font-weight-bold"><a class="nav-link" href="{% url 'app_sirene:contact_list' %}">
+    Contacts</a></li>
+    
+    <li class="nav-item font-weight-bold"><a class="nav-link" href="{% url 'app_sirene:contact_group_list' %}">
+    Groupes</a></li>
+    
+    <li class="nav-item font-weight-bold"><a class="nav-link" href="{% url 'app_sirene:site_list' %}">
+    Sites</a></li>
+    
+    <li class="nav-item font-weight-bold"><a class="nav-link" href="{% url 'app_sirene:service_list' %}">
+    Services</a></li>
+  
+    
+    <li class="nav-item font-weight-bold"><a class="nav-link" href="{% url 'app_sirene:notify_test' %}">
+    Tests</a></li>
+    
+  </ul>
+
+{% endif %}
+
+  <ul class="navbar-nav ml-auto">
+
+    {% if user.is_authenticated %} 
+      <li class="nav-item text-black">
+        <a class="nav-link text-black font-weight-bold" href="{% url 'logout' %}">
+        <i class="fas fa-power-off"></i> Logout
+                <span class="text-danger text-center"> ({{ user.username }})  </span>
+        </a>           
+      </li>
+
+  <li class="nav-item text-black">
+    <a class="nav-link text-black font-weight-bold" href="/admin">
+    <i class="fas fa-power-on"></i> Admin
+    </a>           
+  </li>
+
+    {% else %}
+
+      <li class="nav-item text-black">
+        <a class="nav-link text-black font-weight-bold" href="{% url 'login' %}">
+        <i class="fas fa-power-on"></i> Login
+        </a>           
+      </li>
+    
+    {% endif %}
+
+
+
+  <li class="nav-item">
+    <a class="nav-link font-weight-bold" href="{% url 'app_sirene:about' %}">A propos</a>           
+  </li>
+
+  <li>
+    &nbsp;
+  </li>
+  </ul>
+
+</div>
+</nav>
+
+<!--  NAVBAR 1 DASHBOARD
+
+<nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+
+  <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{% url 'index' %}">MyAPP1</a>
+
+  <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search">
+  
+  <ul class="navbar-nav px-3">
+    <li class="nav-item text-nowrap">
+      <a class="nav-link" href="#">Sign out</a>
+    </li>
+  </ul>
+
+</nav> 
+-->
+{% endblock navbar %}

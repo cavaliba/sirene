@@ -1,0 +1,78 @@
+{% extends 'main_base.html' %}
+
+{% block content %}
+
+<p>
+
+<div class="jumbotron text-center myjumbo">
+  <h1>Cavaliba Application Website</h1>
+  <p>IT Security Products and Services</p> 
+</div>
+
+<hr>
+
+{% if user.is_authenticated %}
+
+    <div>Vous êtes loggués en tant que  : 
+        <span class="text-success text-center"> {{ user.username }} </span></div>
+
+</p>
+
+    <a href="accounts/logout">
+    <button type="button" class="btn btn-danger btn">Logout</button>
+    </a>
+
+    <a href="admin/">
+    <button type="button" class="btn btn-warning btn"> Admin Tools </button>
+    </a>
+
+{% else %}
+
+
+    <a href="accounts/login">
+    <button type="button" class="btn btn-primary btn-sm"> Login </button>
+    </a>
+
+    <a href="/">
+    <button type="button" class="btn btn-secondary btn-sm"> Register </button>
+    </a>
+
+{% endif %}
+
+
+<hr>
+
+<p>Applications disponibles</p>
+
+
+<a href="{% url 'sirene:home' %}">
+<button type="button" class="btn btn-success"> Sirene </button>
+</a>
+
+<a href="#">
+<button type="button" class="btn btn-secondary"> Training </button>
+</a>
+
+<a href="#">
+<button type="button" class="btn btn-secondary"> CISO </button>
+</a>
+
+<a href="#">
+<button type="button" class="btn btn-secondary"> GDPR </button>
+</a>
+
+<a href="#">
+<button type="button" class="btn btn-secondary"> Depozit </button>
+</a>
+
+<a href="#">
+<button type="button" class="btn btn-secondary"> CMDB </button>
+</a>
+
+<a href="template/">
+<button type="button" class="btn btn-dark"><i>Template</i></button>
+</a>
+
+
+{% endblock %}
+

@@ -1,0 +1,76 @@
+
+{% extends "app_sirene/base_nosidebar.html" %}
+
+
+{% block content %}
+
+<p>
+<h5>Tous les messages</h5>
+<p>
+
+{% if infos %}
+<table class="table table-light table-hover table-striped table-bordered table-sm table-condensed">
+    <thead class="thead-dark">
+      <tr>
+        <th>Catégorie</th>
+        <th>Titre</th>
+        <th>Statut</th>
+        <th>Priorité</th>
+        <th>Début</th>
+        <th>Durée</th>
+        <th>Indisponibilité</th>
+        <th>Services SI</th>
+        <th>Sites</th>
+        <th>Mise à jour</th>
+        <th>Auteur</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    {% for line in infos %}
+    
+    <tr>
+
+        <td class="text-left">{{ line.get_category_display }}</td>
+        <td class="text-left">{{ line.title }}</td>
+        <td class="text-left">{{ line.get_status_display }}</td>
+
+        <!-- priority -->
+        <td>
+        {% if line.priority == 1 %}  <i class="fas fa-circle text-dark"></i>
+        {% elif line.priority == 2 %}<i class="fas fa-circle text-danger"></i>
+        {% elif line.priority == 3 %}<i class="fas fa-circle text-warning"></i>
+        {% elif line.priority == 4 %}<i class="fas fa-circle text-success"></i>
+        {% else %} <i class="fas fa-circle text-light"></i>
+        {% endif %} 
+        &nbsp; 
+        {{ line.get_priority_display }}</td>
+
+        <td>{{ line.start|date:"Y/m/d H:i:s" }}</td>
+        <td class="text-left">{{ line.duration }}</td>
+        <td class="text-left">{{ line.downtime }}</td>
+
+      <td>
+           {% for item in line.services.all %}
+           {{ item.name}} &nbsp;
+           {% endfor %}
+      </td>
+      <td>
+           {% for item in line.sites.all %}
+           {{ item.name}} &nbsp;
+           {% endfor %}
+          </td>
+      <td>{{ line.updated_on|date:"Y/m/d H:i:s" }}</td>
+      <td>{{ line.author }}</td>
+
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% else %}
+    <p>Pas de message.</p>
+{% endif %}
+
+{%endblock%}
+

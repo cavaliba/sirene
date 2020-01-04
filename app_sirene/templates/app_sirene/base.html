@@ -1,0 +1,55 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <title>Cavaliba - Sirene</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+  <link rel="stylesheet" href="{% static 'fontawesome/css/all.css' %}">
+
+  <link rel="stylesheet" href="{% static 'app_sirene/app.css' %}">
+
+</head>
+
+
+<body>
+
+<!-- navbar here if needed -->
+<div class="container-fluid">
+
+    <div class="row">
+    {% include 'app_sirene/navbar.html' %} 
+    </div>
+
+    <div class="row" id="main">
+
+        <div class="col-md-2">
+          {% include 'app_sirene/sidebar.html' %} 
+        </div>
+
+        <div class="col-md-10">
+          <!-- <div class="container-fluid"> -->
+          {% block content %} 
+          <!-- Content Goes here -->
+          {% endblock content %}
+          <!-- </div> -->
+        </div>
+
+    </div>
+</div>
+
+<!-- Footer -->
+<div class="container-fluid">
+   <footer class="py-3 bg-grey">
+   <hr> <p class="m-0 text-dark text-center ">Copyright &copy; 2020 - Cavaliba</p>
+   </footer>
+</div>
+
+
+<script src="{% static 'jquery.min.js' %}"></script>
+<script src="{% static 'popper.min.js' %}"></script>
+<script src="{% static 'bootstrap.min.js' %}"></script>
+</body>
+</html>

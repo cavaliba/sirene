@@ -1,0 +1,72 @@
+{% extends "app_sirene/base_nosidebar.html" %}
+{% block content %}
+
+<p>
+<h5>Liste des modèles</h5>
+<p>
+
+<p class="font-italic">Utiliser un modèle pour créer un nouvel événement. Tous les paramètres seront modifiables avant enregistrement.</p>
+
+<p>
+{% if templates %}
+
+<table class="table table-light table-hover table-striped table-bordered table-sm table-condensed">
+    <thead class="thead-dark">
+      <tr>
+        <th class="text-center">Action</th>
+        <th class="text-center">Catégorie</th>
+        <th>Nom du Modèle</th>
+        <th>Nom de l'événement</th>
+        <th>Priorité</th>
+        <th class="text-center">Envoi d'email ?</th>
+        <th class="text-center">Envoi de SMS ?</th>
+        <!-- <th class="text-center">Modifier</th> -->
+      </tr>
+    </thead>
+    <tbody>
+
+    {% for line in templates %}
+    <tr>
+        <td class="text-center">
+          <a href="{% url 'app_sirene:info_new_from_template' line.id %}">
+           <button type="button" class="btn btn-primary btn-sm">
+             <i class="fas fa-pencil-alt"></i> &nbsp; Créer 
+           </button>
+          </a>
+        </td>
+        
+        <td class="text-center">{{ line.get_category_display }}</td>
+        <td class="text-left">{{ line.template_name }}</td>
+        <td class="text-left">{{ line.title }}</td>
+
+        <!-- priority -->
+        <td>
+        {% if line.priority == 1 %}  <i class="fas fa-circle text-dark"></i>
+        {% elif line.priority == 2 %}<i class="fas fa-circle text-danger"></i>
+        {% elif line.priority == 3 %}<i class="fas fa-circle text-warning"></i>
+        {% elif line.priority == 4 %}<i class="fas fa-circle text-success"></i>
+        {% else %} <i class="fas fa-circle text-light"></i>
+        {% endif %} 
+        &nbsp;
+        {{ line.get_priority_display }}</td>
+
+        <td class="text-center">{{ line.send_email }}</td>
+        <td class="text-center">{{ line.send_sms }}</td>
+<!--         <td class="text-center">
+            <a href="{% url 'app_sirene:info_edit' pk=line.id %}">
+            <i class="fas fa-pencil-alt"></i> &nbsp; 
+            <b></b>
+          </a>
+        </td> -->
+    </tr>
+    {% endfor %}
+
+    </tbody>
+  </table>
+
+{% else %}
+    <p>Pas de modèle.</p>
+{% endif %}
+
+{%endblock%}
+

@@ -1,0 +1,55 @@
+{% extends "app_sirene/base_nosidebar.html" %}
+{% block content %}
+
+<p>
+<h5>Incidents Majeurs</h5>
+{% if incidents %}
+    {% include "app_sirene/block_incidents.html" %}
+{% else %}
+    <p class="bg-success text-white p-2">Aucun incident à signaler, le SI fonctionne normalement.</p>
+{% endif %}
+<div class="float-sm-right">
+<a href="info/?r=week&c=i"><span class="badge badge-secondary">Semaine</span></a>
+<a href="info/?r=month&c=i"><span class="badge badge-secondary">Mois</span></a>
+<a href="info/?r=year&c=i"><span class="badge badge-secondary">Année</span></a>
+<a href="info/?r=all&c=i"><span class="badge badge-secondary">Tout</span></a>
+</div>
+<br>
+<hr>
+
+
+<p>
+<h5>Maintenances</h5>
+
+{% if maintenances %}
+        {% include "app_sirene/block_maintenances.html" %}
+{% else %}
+    <p class="text-success">Aucune maintenance prévue dans les 7 prochains jours.</p>
+{% endif %}
+<div class="float-sm-right">
+<a href="info/?r=week&c=m"><span class="badge badge-secondary">Semaine</span></a>
+<a href="info/?r=month&c=m"><span class="badge badge-secondary">Mois</span></a>
+<a href="info/?r=year&c=m"><span class="badge badge-secondary">Année</span></a>
+<a href="info/?r=all&c=m"><span class="badge badge-secondary">Tout</span></a>
+</div>
+<br>
+<hr>
+
+<p>
+<h5>Dernières annonces (7 jours)</h5>
+
+{% if announces %}
+    {% include "app_sirene/block_announces.html" %}
+{% else %}
+    <p class="text-success">Aucune annonce récente.</p>
+{% endif %}
+<div class="float-sm-right">
+<a href="info/?r=week&c=a"><span class="badge badge-secondary">Semaine</span></a>
+<a href="info/?r=month&c=a"><span class="badge badge-secondary">Mois</span></a>
+<a href="info/?r=year&c=a"><span class="badge badge-secondary">Année</span></a>
+<a href="info/?r=all&c=a"><span class="badge badge-secondary">Tout</span></a>
+</div>
+<br>
+
+{%endblock%}
+

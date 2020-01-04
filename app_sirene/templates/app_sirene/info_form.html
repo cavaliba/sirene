@@ -1,0 +1,49 @@
+
+{% extends "app_sirene/base_nosidebar.html" %}
+
+
+{% block content %}
+
+<p>
+<h5>Edition d'une entrée</h5>
+<p>
+<hr>
+
+
+{% if form.errors %}
+        <div class="alert alert-danger" role="alert">
+        Erreur dans le formulaire
+        </div>   
+{% endif %}
+        
+<p>
+
+<form method="post">
+    {% csrf_token %}
+
+   <input type="submit" value="Enregistrer" class="btn btn-sm btn-danger mr-3">
+    <a href="{% url 'app_sirene:home' %}">
+    <button type="button" class="btn btn-secondary btn-sm"> Annuler </button>
+    </a>
+ 
+    <hr>
+
+    <table>
+    {{ form.as_table }}
+    </table>
+
+    <hr>
+
+    <input type="submit" value="Enregistrer" class="btn btn-sm btn-danger mr-3">
+    <a href="{% url 'app_sirene:home' %}">
+    <button type="button" class="btn btn-secondary btn-sm"> Annuler </button>
+    </a>
+    
+
+</form>
+
+{%endblock%}
+
+
+
+

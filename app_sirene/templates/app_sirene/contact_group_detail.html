@@ -1,0 +1,56 @@
+{% extends "app_sirene/base_nosidebar.html" %}
+{% block content %}
+
+<p> 
+<h5>Détail de groupe de contacts</h5>
+<p>
+    
+{% if contactgroup %}
+
+<h6>Groupe :</h6>
+<p>{{ contactgroup.name }}</p>
+
+<h6>Description :</h6>
+    <p>{{ contactgroup.description }}</p>
+
+<h6>Membres :</h6>
+
+
+<table class="table table-light table-hover table-striped table-bordered table-sm table-condensed">
+    <thead class="thead-dark">
+      <tr>
+        <th class="text-center">id</th>
+        <th>Email</th>
+        <th>GSM</th>
+        <th>Prénom</th>
+        <th>Nom</th>
+        <th>Site</th>
+        <th>Actif ?</th>
+        <th>SMS ?</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    {% for line in contactgroup.contacts.all %}
+    <tr>
+        <td class="text-center">{{ line.id }}</td>
+        <td class="text-left">{{ line.email }}</td>
+        <td class="text-left">{{ line.mobile }}</td>
+        <td class="text-left">{{ line.firstname }}</td>
+        <td class="text-left">{{ line.lastname }}</td>
+        <td class="text-left">{{ line.site }}</td>
+        <td class="text-left">{{ line.active }}</td>
+        <td class="text-left">{{ line.want_sms }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+
+
+{% else %}
+    <p>Non disponible</p>
+{% endif %}
+
+{%endblock%}
+

@@ -1,0 +1,44 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <title>MAIN</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{% static 'bootstrap.min.css' %}">
+
+  <link rel="stylesheet" href="{% static 'main.css' %}">
+
+</head>
+
+
+
+<body>
+
+<div class="container">
+
+
+  {% block content %} 
+  <!-- Content Goes here -->
+  {% endblock content %}
+
+<!-- Footer -->
+<div class="container-fluid">
+   <footer class="py-3 bg-grey">
+   <hr> <p class="m-0 text-dark text-center ">Copyright &copy; 2020 - Cavaliba</p>
+   </footer>
+</div>
+
+</div>
+
+<!-- js -->
+<script src="{% static 'jquery.min.js' %}"></script>
+<script src="{% static 'popper.min.js' %}"></script>
+<script src="{% static 'bootstrap.min.js' %}"></script>
+
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.9.0/feather.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js"></script>
+ -->
+</body>
+</html>

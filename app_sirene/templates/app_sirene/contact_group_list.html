@@ -1,0 +1,37 @@
+{% extends "app_sirene/base_nosidebar.html" %}
+{% block content %}
+
+<p>
+<h5>Groupes de Contacts</h5>
+<p>
+
+{% if contactgroups %}
+<table class="table table-light table-hover table-striped table-bordered table-sm table-condensed">
+    <thead class="thead-dark">
+      <tr>
+        <th class="text-center">ID</th>
+        <th>Nom du groupe</th>
+        <th class="text-center">Membres</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    {% for line in contactgroups %}
+    <tr>
+        <td class="text-center">{{ line.id }}</td>
+        <td class="text-left"><a href="{% url 'app_sirene:contact_group_detail' pk=line.id %}">{{ line.name }}</a></td>
+        <td class="text-center">{{ line.size }}</td>
+        <td class="text-left">{{ line.description }}</td>
+    </tr>
+    {% endfor %}
+
+    </tbody>
+  </table>
+
+{% else %}
+    <p>Pas de groupes de contacts.</p>
+{% endif %}
+
+{%endblock%}
+

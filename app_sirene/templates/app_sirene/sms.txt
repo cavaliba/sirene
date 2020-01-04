@@ -1,0 +1,9 @@
+TEST TEST TEST
+
+SMS Sirene
+----------
+
+Category : {{ info.get_category_display }}
+Titre : {{ info.title }}
+
+Cf **sirene** pour plus d'information.

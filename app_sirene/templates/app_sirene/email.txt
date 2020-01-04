@@ -1,0 +1,12 @@
+TEST TEST TEST
+
+Notification d'incident Cavaliba / Sirene
+------------------------------------------
+
+Titre : {{ info.title }}
+
+Detail : {{ info.detail }}
+
+
+---
+Cf **sirene** pour plus d'information.

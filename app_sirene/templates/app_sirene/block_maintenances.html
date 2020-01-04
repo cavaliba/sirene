@@ -1,0 +1,61 @@
+
+<table class="table table-light table-hover table-striped table-bordered table-sm table-condensed">
+
+    <thead class="thead-light">
+      <tr>
+
+        <th>Titre</th>
+        <th class="text-center">Etat</th>
+        <th>Début</th>
+        <th>Durée (estim.)</th>
+        <th>Indisponibilité</th>
+        <th>Services SI</th>
+        <th>Sites</th>
+        <th>Mise à jour</th>
+        <th>Auteur</th>
+      </tr>
+    </thead>
+
+    <tbody>
+    {% for line in maintenances %}
+    <tr>
+
+      {% if user.is_authenticated %} 
+      <td> 
+        <a href="{% url 'app_sirene:info_detail' pk=line.id %}">
+        <i class="fas fa-bullhorn"></i> &nbsp; 
+        </a>
+        <a href="{% url 'app_sirene:info_edit' pk=line.id %}">
+        <i class="fas fa-pencil-alt"></i> &nbsp; 
+        <b>{{ line.title }}</b>
+        </a>
+      </td>
+      {% else %}
+      <td>
+        <a href="{% url 'app_sirene:info_detail' pk=line.id %}">
+        <i class="fas fa-bullhorn"></i> &nbsp; 
+        <b>{{ line.title }}</b>
+        </a>
+      </td>
+      {% endif %}
+
+      <td class="text-center">{{ line.get_status_display }}</td>
+      <td>{{ line.start|date:"Y/m/d H:i:s" }}</td>
+      <td>{{ line.duration }} (minutes)</td>
+      <td>{{ line.downtime }} (minutes)</td>
+      <td>
+           {% for item in line.services.all %}
+           {{ item.name}} &nbsp;
+           {% endfor %}
+      </td>
+      <td>
+           {% for item in line.sites.all %}
+           {{ item.name}} &nbsp;
+           {% endfor %}
+          </td>
+      <td>{{ line.updated_on|date:"Y/m/d H:i:s" }}</td>
+      <td>{{ line.author }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
