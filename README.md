@@ -44,6 +44,6 @@ Feel free to drop a note at contact@cavaliba.com anyway.
 REVISION
 --------
 
-2020/01/04 - V1.02 - Inital publish to GitHub
+2020/01/04 - 1.02 - Inital publish to GitHub
 
 
