@@ -1,77 +1,49 @@
-README Cavaliba
-===============
+README Cavaliba Sirene
+======================
+(c) 2020 Cavaliba 
+
+Sirene is a simpletool for IT teams and their users. 
+
+It makes easy to send or display notifications to groups of users in case of IT outage, IT planed downtime, ot for any general annoucement.
+
+Notifications can be a combination of Web items on public (or private) dashboard, emails, and SMS.
+
+You can use predefined models (templates) to enable quick notifications, reducing typo and errors under stress.
 
 
----------------------------------------------------------------------
-Memento
----------------------------------------------------------------------
+LICENSE
+-------
+See LICENSE file. Opensurce Software with a 3 points BDS-like license.
 
-start cavaliba
---------------
-export CAVALIBA_DBPWD=xxx
-python3 manage.py runserver
+INSTALL
+-------
+see INSTALL file.
 
+TECHNICAL
+---------
+Sirene is a Python3/Django3 based software with a MariaDB/Mysql backend database.
 
-create superuser
-----------------
-python3 manage.py createsuperuser
-admin / *****************
-   => 127.0.0.1/admin
+It provides a responsive behavior based on CSS/JS framework Bootstrap 4.
 
----------------------------------------------------------------------
-Install Mysql
----------------------------------------------------------------------
+It is best deployed on a stack like :
+- Linux 
+- Apache or Nginx
+- MariaDB 10.X
+- python 3.X / Django 3.X
+- gunicorn (for Apache to Python wsgi interface)
+- supervisord for automatic monitoring and restart
 
-sudo apt-get install mariadb-server
-mysql -V
-sudo apt-get install python3-dev
-sudo apt-get install python3-dev libmysqlclient-dev
-sudo python3 -m pip install mysqlclient
+It lives at github under Cavaliba portfolio.
 
-mysql -u root -p
+SUPPORT
+-------
+Sirene is provided as-is and no direct support is available at the moment. 
 
-CREATE DATABASE cavaliba_dev CHARACTER SET utf8 COLLATE utf8_bin;
-grant all privileges on cavaliba_dev.* to cavaliba_dev@localhost identified by 'xxx';
-FLUSH PRIVILEGES;
+Feel free to drop a note at contact@cavaliba.com anyway.
 
-SELECT User,Host FROM mysql.user;
-SHOW GRANTS FOR 'cavaliba_dev'@'localhost';
+REVISION
+--------
 
----------------------------------------------------------------------
-Install App Cavaliba
----------------------------------------------------------------------
-install Django...
-
-git clone ssh://boss@marcy.paturel.net:/data/phil/Git/cavaliba.git
-
-cd cavaliba
-
-settings.py :
-
-SECRET_KEY
-ALLOWED_HOSTS
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'cavaliba_dev',
-        'USER': 'cavaliba_dev',
-        'PASSWORD': 'XXX',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
-    }
-}
-
-
-export CAVALIBA_DBPWD=xxx
-
-python3 manage.py makemigrations
-python3 manage.py migrate
-
-python3 manage.py createsuperuser
-   => http://127.0.0.1:8000/admin
-
-python3 manage.py runserver
-   => http://127.0.0.1:8000
-
+2020/01/04 - V1.02 - Inital publish to GitHub
 
 
