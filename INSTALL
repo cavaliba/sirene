@@ -52,14 +52,15 @@ vi cavaliba/settings.py :
 
 SECRET_KEY = " <insert a long random string> "
 CAVALIBA_DBPWD = XXXXXXX    (or use OS.environ variable, see below)
-ALLOWED_HOSTS = ['127.0.0.1','localhost']
-DEBUG = False    (True for Local tests / non production usage)
+ALLOWED_HOSTS = ['127.0.0.1','localhost', 'xxxxx']   
+    => xxxx : add server lan  IP address if directremote access required
+DEBUG = True   (True for Local tests / False for production usage)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'cavaliba_sirene',
         'USER': 'cavaliba_sirene',
-        #'PASSWORD': os.environ.get('CAVALIBA_DBPWD') ,
+        'PASSWORD': os.environ.get('CAVALIBA_DBPWD') ,
         #'PASSWORD': 'xxxxxxxxxxxxxxx' ,
         'HOST': 'localhost',
         'PORT': '3306',
@@ -77,7 +78,7 @@ export CAVALIBA_DBPWD=xxx
 export CAVALIBA_DBPWD=xxx
 
 # Create DB Tables and initial data
-python3 manage.py makemigrations
+python3 manage.py makemigrations app_sirene
 python3 manage.py migrate
 
 # if using apache/nginx , collect static assets (css,js,image) to target dir
@@ -95,7 +96,7 @@ First start - manual / direct (no web server)
 ---------------------------------------------------------------------
 
 # First local start -  insecure means : serves static files directly
-python3 manage.py runserver --insecure
+python3 manage.py runserver --insecure 0.0.0.0:8000
    => http://127.0.0.1:8000
 
 # Start manuall with wsgi interface
