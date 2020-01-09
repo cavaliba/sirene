@@ -28,7 +28,7 @@ Configure Mysql/MariaDB database
 mysql -u root -p
 
 CREATE DATABASE cavaliba_sirene CHARACTER SET utf8 COLLATE utf8_bin;
-grant all privileges on cavaliba_sirene.* to cavaliba_sirene@% identified by 'xxxxxxxx';
+GRANT ALL PRIVILEGES ON cavaliba_sirene.* TO 'cavaliba_sirene'@'%' identified by 'xxxxxxxx';
 FLUSH PRIVILEGES;
 
 SELECT User,Host FROM mysql.user;
