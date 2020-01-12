@@ -95,12 +95,15 @@ python3 manage.py createsuperuser
 First start - manual / direct (no web server)
 ---------------------------------------------------------------------
 
-# First local start -  insecure means : serves static files directly
+# First local start 
+# --insecure   : serves static files directly
+# 0.0.0.0:8000 : accept connexions from LAN (as well as localhost)
+
 python3 manage.py runserver --insecure 0.0.0.0:8000
    => http://127.0.0.1:8000
 
 # Start manuall with wsgi interface
-gunicorn ........
+gunicorn cavaliba.wsgi:application -b 0.0.0.0:8000
 
 
 ---------------------------------------------------------------------
