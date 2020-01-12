@@ -119,10 +119,10 @@ class Info(models.Model):
     downtime = models.IntegerField('Indisponibilité', default=0, blank=True, null=True,
             help_text="Indisponibilité estimée/définitive en minutes.")
     detail   = models.TextField('Description', max_length=4000, blank=True, null=True)
-    services = models.ManyToManyField(Service)
-    sites    = models.ManyToManyField(Site)
+    services = models.ManyToManyField(Service, blank=True)
+    sites    = models.ManyToManyField(Site, blank=True)
     # notifications
-    notify_groups = models.ManyToManyField(ContactGroup)
+    notify_groups = models.ManyToManyField(ContactGroup, blank=True)
     send_email    = models.BooleanField('Envoi de mail', default=True)
     send_sms      = models.BooleanField('Envoi de SMS', default=False)
     # template
