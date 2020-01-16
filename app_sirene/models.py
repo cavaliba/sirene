@@ -27,7 +27,7 @@ class Contact(models.Model):
     is_active = models.BooleanField('Actif', default=True)
     want_email= models.BooleanField('Email', default=True)
     want_sms  = models.BooleanField('SMS', default=True)
-    site      = models.CharField('Site', max_length=128, blank=True)
+    comment   = models.CharField('Commentaire', max_length=128, blank=True)
 
     class Meta:
         ordering = ['pk','lastname','firstname']

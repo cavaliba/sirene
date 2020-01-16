@@ -159,17 +159,22 @@ MESSAGE_TAGS = {
 # EMAIL GENERAL SETUP
 # -------------------
 
-# Debug / log to console
+# Debug
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
-# Production / Real emails
+# Real
 #EMAIL_HOST = "192.168.0.20"
 #EMAIL_HOST = "localhost"
 #EMAIL_PORT = 25
-#EMAIL_HOST_USER
-#EMAIL_HOST_PASSWORD 
-#EMAIL_USE_TLS 
+# AUTH
+#EMAIL_HOST_USER = 'mylogin'
+#EMAIL_HOST_PASSWORD = 'mypassword'
+# SSL
+#EMAIL_PORT = 465
 #EMAIL_USE_SSL 
+# TLS
+#EMAIL_PORT = 587
+#EMAIL_USE_TLS = True
 
 # -------------------------------
 # SMS Provider

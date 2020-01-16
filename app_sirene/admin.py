@@ -24,15 +24,15 @@ from .models import Info
 # -----------------------
 @admin.register(Contact)
 class ContactAdmin(admin.ModelAdmin):
-    list_display = ('email', 'firstname','lastname','mobile','site','is_active','want_sms','want_email','pk')
-    list_filter = ("is_active","site","want_sms")
+    list_display = ('email', 'firstname','lastname','mobile','comment','is_active','want_sms','want_email','pk')
+    list_filter = ("is_active","want_email","want_sms")
 
 
 #admin.site.register(Contact)
 
 @admin.register(ContactGroup)
 class ContactGroupAdmin(admin.ModelAdmin):
-    list_display =('pk','name','description','size')
+    list_display =('name','description','size','pk')
 
 # -----------------------
 @admin.register(Site)
