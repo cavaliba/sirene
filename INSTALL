@@ -13,9 +13,10 @@ For tests/evaluation purposes :
 * mariadb/mysql
 
 For production / regular usage, add :
+* requests  (pip install requests)
 * apache2 or nginx
-* gunicorn  [wsgi / python / web interface]
-* supervisord [launcher]
+* gunicorn  [wsgi / python / web interface]  (pip install gunicorn)
+* supervisord [launcher]   
 
 Additionnal tools [optional]
 * Mysql Workbench
