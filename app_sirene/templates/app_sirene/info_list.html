@@ -5,7 +5,7 @@
 {% block content %}
 
 <p>
-<h5>Tous les messages</h5>
+<h5>Anciens messages</h5>
 <p>
 
 {% if infos %}
@@ -32,7 +32,10 @@
     <tr>
 
         <td class="text-left">{{ line.get_category_display }}</td>
-        <td class="text-left">{{ line.title }}</td>
+        <td class="text-left">
+          <i class="fas fa-book-open"></i> &nbsp; 
+          <b><a href="{% url 'app_sirene:info_detail' pk=line.id %}">{{ line.title }}</a></b>
+        </td>
         <td class="text-left">{{ line.get_status_display }}</td>
 
         <!-- priority -->
@@ -69,7 +72,7 @@
   </table>
 
 {% else %}
-    <p>Pas de message.</p>
+    <p>Aucun message.</p>
 {% endif %}
 
 {%endblock%}

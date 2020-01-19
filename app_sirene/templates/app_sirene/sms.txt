@@ -1,9 +1,1 @@
-TEST TEST TEST
-
-SMS Sirene
-----------
-
-Category : {{ info.get_category_display }}
-Titre : {{ info.title }}
-
-Cf **sirene** pour plus d'information.
+TEST - Cavaliba Sirene - {{ info.get_category_display }} - {{ info.title }} - Cf demo.cavaliba.com

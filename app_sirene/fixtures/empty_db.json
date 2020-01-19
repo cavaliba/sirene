@@ -1,0 +1,27 @@
+[
+{
+    "model": "app_sirene.contactgroup",
+    "pk": 1,
+    "fields": {
+        "name": "n/a",
+        "description": "aucun - non d\u00e9fini",
+        "contacts": []
+    }
+},
+{
+    "model": "app_sirene.site",
+    "pk": 1,
+    "fields": {
+        "name": "n/a",
+        "description": "aucun - non d\u00e9fini"
+    }
+},
+{
+    "model": "app_sirene.service",
+    "pk": 1,
+    "fields": {
+        "name": "n/a",
+        "description": "aucun - non d\u00e9fini"
+    }
+}
+]

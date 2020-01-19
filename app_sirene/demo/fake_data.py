@@ -7,8 +7,6 @@
 CONTACT = 20
 CONTACTGROUP = 10
 CONTACTGROUPSIZE = 5
-SITE = 10
-SERVICE=10
 
 import random
 from random import randint
@@ -17,9 +15,6 @@ import faker
 
 from app_sirene.models import Contact
 from app_sirene.models import ContactGroup
-from app_sirene.models import Site
-from app_sirene.models import Service
-
 
 
 f=faker.Faker('fr_FR')
@@ -66,26 +61,3 @@ for i in range(CONTACTGROUP):
     print(c.name, c.description)
 
 
-# -------------------------
-# Site
-# -------------------------
-print()
-for i in range(SITE):
-
-    c = Site()
-    c.name = 'SITE_' + f.city()
-    c.description = f.text(max_nb_chars=40)
-    c.save()
-    print (c.name, c.description)
-
-# -------------------------
-# Service
-# -------------------------
-print()
-for i in range(SERVICE):
-
-    c = Service()
-    c.name = 'SERVICE_' + f.url()
-    c.description = f.sentence()
-    c.save()
-    print (c.name, c.description)

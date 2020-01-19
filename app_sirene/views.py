@@ -1,4 +1,5 @@
 # views.py
+# Cavaliba SIRENE (c) 2020
 
 import datetime
 import re
@@ -44,132 +45,10 @@ from .models import Info
 
 from .forms import InfoForm
 
-# --------------------------------------------------------
-# Send Notifications - email - sms
-# --------------------------------------------------------
-def send_sms(num,sms):
-    # TODO - plug external API here
-    print("send_sms() ; from:",num," ; content:",sms[0:5],"(...)")
-    return True
-
-
-def send_notification(ninf):
-    """Send all noticications required from Info object ninf"""
-
-    result = True
-
-    # build a list of emails and sms
-    emails={}
-    sms={}
-
-    for grp in ninf.notify_groups.all():
-        #print("Group:",grp)
-        for contact in grp.contacts.all():
-            #print("   Contact:",contact)
-            if contact.is_active:
-                if contact.want_email:
-                    emails[contact.email]=1
-                if contact.want_sms:
-                    sms[contact.mobile]=1
-
-    # emails
-    # ------
-    if ninf.visible and ninf.send_email:
-        # d = Context({'info': ninf })
-        # plaintext = get_template('sirene_email.txt')
-        # text_content = plaintext.render(d)
-        # htmly     = get_template('app_sirene/email.html')
-        # html_content = htmly.render(d)
-        text_content = render_to_string('app_sirene/email.txt', {'info': ninf})
-        html_content = render_to_string('app_sirene/email.html', {'info': ninf})
-        #subject = ninf.title
-        from_email = settings.SIRENE_EMAIL_FROM
-        subject = settings.SIRENE_EMAIL_SUBJECT
-
-        all_messages=[]
-        for dest in emails.keys():
-            msg = mail.EmailMultiAlternatives(subject, text_content, from_email, [dest])
-            msg.attach_alternative(html_content, "text/html")
-            #msg = mail.EmailMessage(subject=subject, from_email=from_email, body=html_content, to=[dest])
-            #msg.content_subtype = "html"  # Main content is now text/html
-            #msg.send()
-            all_messages.append(msg)
-
-        try:
-            connection = mail.get_connection()
-            connection.send_messages(all_messages)
-            connection.close()
-        except:
-            result=False
-  
-    # SMS
-    # ---
-    if ninf.visible and ninf.send_sms:
-        sms_content = render_to_string('app_sirene/sms.txt', {'info': ninf})
-        for dest in sms.keys():
-            if not send_sms(dest,sms_content):
-                result = False
-
-    return result
-
-# --------------------------------------------------------
-# NOTIFY TEST
-# --------------------------------------------------------
-
-@login_required
-def notify_test(request):
-    #return HttpResponse("Hello from notify_test")
-
-    # GET - send empty form
-    if request.method =='GET':
-        return render(request, 'app_sirene/notify_test.html',{})
-    
-    # POST - process form
-    # print (request.POST)
-    if 'email' in request.POST:
-        dirty_email = request.POST['email']
-        if re.match(r'^[^@]+@[^@]+\.[^@]+', dirty_email):
-            clean_email=dirty_email
-        else:
-            messages.add_message(request, messages.ERROR, "Format d'adresse EMAIL invalide")
-            return render(request, 'app_sirene/notify_test.html',{})
-
-        text_content = render_to_string('app_sirene/email_test.txt', {})
-        html_content = render_to_string('app_sirene/email_test.html', {})
-
-        from_email = settings.SIRENE_EMAIL_TEST_FROM
-        subject = settings.SIRENE_EMAIL_TEST_SUBJECT
-
-        try:
-            msg = mail.EmailMultiAlternatives(subject, text_content, from_email, [clean_email])
-            msg.attach_alternative(html_content, "text/html")
-            msg.send()
-            messages.add_message(request, messages.SUCCESS, 'Envoi de MAIL réussi.')
-        except:
-            messages.add_message(request, messages.ERROR, 'Envoi de MAIL échoué.')
-
-
-
-    if 'sms' in request.POST:
-        dirty_sms = request.POST['sms']
-
-        if re.match(r'^^\d{10}$', dirty_sms):
-        #if re.match(r'^^\+?1?\d{9,15}$', dirty_sms):
-            clean_num=dirty_sms
-        else:
-            messages.add_message(request, messages.ERROR, 'Format de numéro SMS invalide (10 chiffres).')
-            return render(request, 'app_sirene/notify_test.html',{})
-
-        sms = render_to_string('app_sirene/sms_test.txt', {})    
-        try:
-            send_sms(clean_num,sms)
-            messages.add_message(request, messages.SUCCESS, 'Envoi de SMS réussi.')
-        except:
-            messages.add_message(request, messages.ERROR, 'Envoi de SMS échoué.')
-
-
-    #return HttpResponse("Hello from notify_test")
-    return render(request, 'app_sirene/notify_test.html',{})
+from .notification import sirene_send_sms
+from .notification import sirene_send_email
+from .notification import sirene_send_notification
+from .notification import sirene_get_notification
 
 # --------------------------------------------------------
 # HOME PAGE
@@ -197,6 +76,127 @@ def home(request):
         'incidents': incidents,
     }
     return render(request, 'app_sirene/home.html',context)
+
+# --------------------------------------------------------
+# View - Notification Confirm & send
+# --------------------------------------------------------
+@login_required
+def notify_confirm(request, pk):
+    """Display a confirmation form before sending notifications"""
+    #return HttpResponse("Hello from notify_confirm")
+
+    try:
+        item = Info.objects.get(pk=pk)
+    except:
+        raise Http404("Evénement non disponible.")
+
+    # check  item is visible  
+    if not item.visible:
+        #messages.add_message(request, messages.ERROR, 'Evénement non disponible.')
+        return HttpResponseRedirect(reverse('app_sirene:home'))
+
+    # check it is not a template
+    if item.is_template:
+        messages.add_message(request, messages.INFO, 'Pas d\'envoi de notification pour les modèles.')
+        return HttpResponseRedirect(reverse('app_sirene:home'))
+
+    # count_sms,  count_email
+    (emails, sms) = sirene_get_notification(item)
+
+    num_email = 0
+    if item.send_email:
+        num_email = len (emails)
+    
+    num_sms = 0
+    if item.send_sms:
+        num_sms = len (sms)
+
+    if num_email + num_sms > 0:
+        return render(request, 'app_sirene/notify_confirm.html',
+            {'item': item, 'num_sms':num_sms,'num_email':num_email})
+    else:
+        messages.add_message(request, messages.INFO, 'Pas de notification requise.')
+        return HttpResponseRedirect(reverse('app_sirene:home'))
+
+# --------------------------------------------------------
+
+@login_required
+def notify_send(request, pk):
+    """Send notifications and redict to HOME"""
+    #return HttpResponse("Hello from notify_send")
+
+    try:
+        item = Info.objects.get(pk=pk)
+    except:
+        raise Http404("Evénement non disponible.")
+
+    # count_sms,  count_email
+    if sirene_send_notification(item):
+        messages.add_message(request, messages.SUCCESS, 'Envoi de MAIL/SMS réussi.')
+    else:
+        messages.add_message(request, messages.ERROR, 'Envoi de MAIL/SMS échoué.')
+
+    return HttpResponseRedirect(reverse('app_sirene:home'))
+
+
+# --------------------------------------------------------
+# View - NOTIFY TEST
+# --------------------------------------------------------
+
+@login_required
+def notify_test(request):
+    #return HttpResponse("Hello from notify_test")
+
+    # GET - send empty form
+    if request.method =='GET':
+        return render(request, 'app_sirene/notify_test.html',{})
+    
+    # POST - process form
+    # print (request.POST)
+    if 'email' in request.POST:
+        dirty_email = request.POST['email']
+        if re.match(r'^[^@]+@[^@]+\.[^@]+', dirty_email):
+            clean_email=dirty_email
+        else:
+            messages.add_message(request, messages.ERROR, "Format d'adresse EMAIL invalide")
+            return render(request, 'app_sirene/notify_test.html',{})
+
+        text_content = render_to_string('app_sirene/email_test.txt', {})
+        html_content = render_to_string('app_sirene/email_test.html', {})
+
+        from_email = settings.SIRENE_EMAIL_TEST_FROM
+        subject = settings.SIRENE_EMAIL_TEST_SUBJECT
+
+        try:
+            sirene_send_email(subject,text_content, from_email, clean_email)
+            messages.add_message(request, messages.SUCCESS, 'Envoi de MAIL réussi.')
+        except:
+            messages.add_message(request, messages.ERROR, 'Envoi de MAIL échoué.')
+
+
+
+    if 'sms' in request.POST:
+        dirty_sms = request.POST['sms']
+
+        #if re.match(r'^^\d{10}$', dirty_sms):
+        if re.match(r'^^\+?1?\d{9,15}$', dirty_sms):
+            clean_num=dirty_sms
+        else:
+            messages.add_message(request, messages.ERROR, 'Format de numéro SMS invalide.')
+            return render(request, 'app_sirene/notify_test.html',{})
+
+        sms = render_to_string('app_sirene/sms_test.txt', {})    
+        try:
+            sirene_send_sms(clean_num,sms)
+            messages.add_message(request, messages.SUCCESS, 'Envoi de SMS réussi.')
+        except:
+            messages.add_message(request, messages.ERROR, 'Envoi de SMS échoué.')
+
+
+    #return HttpResponse("Hello from notify_test")
+    return render(request, 'app_sirene/notify_test.html',{})
+
+
 
 # --------------------------------------------------------
 # template/
@@ -266,7 +266,8 @@ def info_list(request):
     return render(request, 'app_sirene/info_list.html',{'infos' : infos})
 
 
-# ------------------
+# ---------------------------------------------------------
+# detail
 # info/<int>/
 def info_detail(request, pk):
    #return HttpResponse("Hello from Info Detail : " + str(pk))
@@ -279,7 +280,8 @@ def info_detail(request, pk):
 
     return render(request, 'app_sirene/info_detail.html',{ 'info':info })
 
-# -------------------------------------------
+# ---------------------------------------------------------
+# NEW
 # info/new/ ; no id   or <pk> as template id
 @login_required
 def info_new(request, pk=None):
@@ -324,12 +326,13 @@ def info_new(request, pk=None):
             ninf.save()
 
             # send notifications
-            if send_notification(ninf):
-                messages.add_message(request, messages.SUCCESS, 'Envoi de MAIL/SMS réussi.')
-            else:
-                messages.add_message(request, messages.ERROR, 'Envoi de MAIL/SMS échoué.')
+            return HttpResponseRedirect(reverse('app_sirene:notify_confirm', kwargs={'pk': ninf.pk}))
+            # if send_notification(ninf):
+            #     messages.add_message(request, messages.SUCCESS, 'Envoi de MAIL/SMS réussi.')
+            # else:
+            #     messages.add_message(request, messages.ERROR, 'Envoi de MAIL/SMS échoué.')
 
-            return HttpResponseRedirect(reverse('app_sirene:home'))
+            # return HttpResponseRedirect(reverse('app_sirene:home'))
        
 
     # GET - new form - empty or template-based ?
@@ -351,7 +354,8 @@ def info_new(request, pk=None):
     # form not valid : resend
     return render(request, 'app_sirene/info_form.html', {'form': form})
 
-# -----------------
+# -------------------------------------------------
+# EDIT
 # info/<int>/edit   ; and close ...
 @login_required
 def info_edit(request, pk):
@@ -388,12 +392,13 @@ def info_edit(request, pk):
                 messages.add_message(request, messages.ERROR, "Erreur d'enregistrement.")
 
             # send notifications
-            if send_notification(ninf):
-                messages.add_message(request, messages.SUCCESS, 'Envoi de MAIL/SMS réussi.')
-            else:
-                messages.add_message(request, messages.ERROR, 'Envoi de MAIL/SMS échoué.')
+            return HttpResponseRedirect(reverse('app_sirene:notify_confirm', kwargs={'pk': ninf.pk} ))
+            # if send_notification(ninf):
+            #     messages.add_message(request, messages.SUCCESS, 'Envoi de MAIL/SMS réussi.')
+            # else:
+            #     messages.add_message(request, messages.ERROR, 'Envoi de MAIL/SMS échoué.')
 
-            return HttpResponseRedirect(reverse('app_sirene:home'))
+            # return HttpResponseRedirect(reverse('app_sirene:home'))
 
         else:
             messages.add_message(request, messages.ERROR, 'Formulaire invalide.')

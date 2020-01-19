@@ -23,7 +23,7 @@ class InfoForm(ModelForm):
                 'detail',
                 'services','sites',
                 'notify_groups','send_email', 'send_sms',
-                'is_template','template_name',
+                #'is_template','template_name',
                 'visible',
         ]
 

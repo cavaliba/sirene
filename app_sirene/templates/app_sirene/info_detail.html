@@ -6,11 +6,13 @@
 </a>
 -->
 
-<p> 
-<h4 class="text-primary">Détails</h4>
-<p>
+
 
 {% if info %}
+
+<p> 
+<h4>{{ info.title }}</h4>
+<p>
 
 <div class="container border rounded">
 
@@ -38,6 +40,16 @@
     Priorité :
     </div>
     <div class="col col-sm-10">
+
+      {% if info.priority == 1 %}  <i class="fas fa-circle text-dark"></i>
+      {% elif info.priority == 2 %}<i class="fas fa-circle text-danger"></i>
+      {% elif info.priority == 3 %}<i class="fas fa-circle text-warning"></i>
+      {% elif info.priority == 4 %}<i class="fas fa-circle text-success"></i>
+      {% else %} <i class="fas fa-circle text-light"></i>
+      {% endif %} 
+      &nbsp;
+      
+
     {{ info.get_priority_display }}
     </div>
 </div>
@@ -128,6 +140,22 @@
         {{ info.send_sms|yesno:"Oui,Non" }} <br>
     </div>
 </div>
+
+
+<div class="row">
+    <div class="col col-sm-2 text-right font-weight-bold">
+    Groupes de notification :
+    </div>
+    <div class="col col-sm-10">
+        {% for item in info.notify_groups.all %}
+        {{ item.name}} ({{ item.description }} )<br>
+        {% endfor %}
+    </div>
+</div>
+
+
+
+
 
 <hr>
 

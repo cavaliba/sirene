@@ -18,6 +18,8 @@ from .views import info_new
 from .views import info_edit
 from .views import template_list
 from .views import notify_test
+from .views import notify_confirm
+from .views import notify_send
 
 # provided by django AAA
 # from myapp1.views import logout
@@ -87,6 +89,12 @@ urlpatterns = [
     # ----------------------------    
     path('service/', service_list, name='service_list'),
 
+
+    # ----------------------------
+    # service_list
+    # ----------------------------    
+    path('notify_confirm/<int:pk>/', notify_confirm, name='notify_confirm'),
+    path('notify_send/<int:pk>/', notify_send, name='notify_send'),
     path('notify_test/', notify_test, name='notify_test'),
 
     # logout

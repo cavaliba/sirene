@@ -1,6 +1,6 @@
 INSTALL CAVALIBA SIRENE
 =======================
-(c) Cavaliba 2020
+(c) Cavaliba 2020 
 
 
 ---------------------------------------------------------------------
@@ -14,8 +14,8 @@ For tests/evaluation purposes :
 
 For production / regular usage, add :
 * apache2 or nginx
-* gunicorn
-* supervisord
+* gunicorn  [wsgi / python / web interface]
+* supervisord [launcher]
 
 Additionnal tools [optional]
 * Mysql Workbench
@@ -51,10 +51,10 @@ cp cavaliba/settings.py.original cavaliba/settings.py
 vi cavaliba/settings.py :
 
 SECRET_KEY = " <insert a long random string> "
-CAVALIBA_DBPWD = XXXXXXX    (or use OS.environ variable, see below)
-ALLOWED_HOSTS = ['127.0.0.1','localhost', 'xxxxx']   
-    => xxxx : add server lan  IP address if directremote access required
-DEBUG = True   (True for Local tests / False for production usage)
+CAVALIBA_DBPWD = XXXXXXX    # or use OS.environ variable, see below
+ALLOWED_HOSTS = ['127.0.0.1','localhost']     # ADD IP if direct access needed
+
+DEBUG = False  #  True for Local tests / False for production usage
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -68,9 +68,11 @@ DATABASES = {
 }
 STATIC_ROOT = /var/www/html/static/
 
-EMAIL SMTP SERVER
-SMS SERVER / API
+Configure also :
+- EMAIL SMTP SERVER
+- SMS SERVER / API
 
+# If needed (no DB password in settings.py)
 # Set env variable if needed (if no static password in settings.py)
 export CAVALIBA_DBPWD=xxx
 
@@ -81,53 +83,106 @@ export CAVALIBA_DBPWD=xxx
 python3 manage.py makemigrations app_sirene
 python3 manage.py migrate
 
-# if using apache/nginx , collect static assets (css,js,image) to target dir
+# Collect static assets (css,js,image) to target dir, served by Apache/Nginx
 # not needed if settings.DEBUG = True
 python3 manage.py collectstatic
 
-# Create Django superadmin
+# Create Django superadmin  (full access to admin backend)
 python3 manage.py createsuperuser
 
+---------------------------------------------------------------------
 # Load Demo Data if needed
+---------------------------------------------------------------------
 
+# For an almost empty DB
+python3 manage.py loaddata empty_db.json
+
+# small realistic data set
+python3 manage.py loaddata demo_db.json
 
 ---------------------------------------------------------------------
 First start - manual / direct (no web server)
 ---------------------------------------------------------------------
+Set DEBUG = True in app_sirene/settings.py
 
-# First local start 
+python3 manage.py runserver
+python3 manage.py runserver --insecure 0.0.0.0:8000
 # --insecure   : serves static files directly
 # 0.0.0.0:8000 : accept connexions from LAN (as well as localhost)
+   => access on http://127.0.0.1:8000
 
-python3 manage.py runserver --insecure 0.0.0.0:8000
-   => http://127.0.0.1:8000
-
-# Start manuall with wsgi interface
+# Start manually with wsgi server
 gunicorn cavaliba.wsgi:application -b 0.0.0.0:8000
 
+You may need to update ALLOWED_HOSTS in settings.py
 
 ---------------------------------------------------------------------
-Cavaliba Sirene Admin
+Cavaliba Sirene Administration permissions
 ---------------------------------------------------------------------
+Create users who can
+-  administer Models, Contacts, Sites, Services
+
+With superadmin account (see before) 
+- connect to  admin backend (link "admin")
+- create a "sirene" user
+- give permission on app_sirene tables
+- give "is-staff" to enable access to admin backend
 
 ---------------------------------------------------------------------
 Create Cavaliba Sirene Users
 ---------------------------------------------------------------------
+Can create message, send notification, use Models
 
+With superadmin account (see before) :
+- create an "sirene" user through the admin application
+- give permission on app_sirene tables
+- don't give "is-staff" to enable access to admin application
 
----------------------------------------------------------------------
-Configure Web Server and Auto Start
----------------------------------------------------------------------
-settings.py
-DEBUG = False
-
-virtual host
-gunicorn
-supervisord
+Alternatively, you can create groups with permissions, and put users in groups.
 
 ---------------------------------------------------------------------
-Start/Stop/Logfiles/Purge Data/Security
+Apache Web Config
 ---------------------------------------------------------------------
 
+$ cat /etc/apache2/sites-enabled/000-default.conf 
+<VirtualHost *:80>
+
+        ServerName demo.cavaliba.com
+        ServerAdmin contact@cavaliba.com
+        DocumentRoot "/var/www/html"
+
+        #LogLevel info ssl:warn
+        ErrorLog ${APACHE_LOG_DIR}/error.log
+        CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+
+        ProxyPass /static/ !
+        ProxyPass /media/ !
+        ProxyPass / http://localhost:8000/
+
+        <Directory "/var/www/html/static/">
+            Order allow,deny
+            Allow from all
+            Options -Indexes 
+            Options FollowSymLinks MultiViews
+            Satisfy Any
+            #AllowOverride None
+        </Directory>
+        
+</VirtualHost>
+
+---------------------------------------------------------------------
+supervisord config
+---------------------------------------------------------------------
+
+cat /etc/supervisor/conf.d/cavaliba.conf 
+
+[program:cavaliba_sirene]
+command=/usr/local/bin/gunicorn -w 3 -b 127.0.0.1:8000 cavaliba.wsgi
+directory=/var/www/cavaliba_sirene
+user=test
+autostart=true
+autorestart=true
+redirect_stderr=true
 
 

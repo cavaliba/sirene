@@ -43,7 +43,7 @@ class SiteAdmin(admin.ModelAdmin):
 # -----------------------
 @admin.register(Service)
 class ServiceAdmin(admin.ModelAdmin):
-    list_display = ('pk','name', 'description')
+    list_display = ('name', 'description','pk')
 
 # -----------------------
 # @admin.register(Incident)

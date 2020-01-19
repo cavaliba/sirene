@@ -3,7 +3,7 @@
 
     <thead class="thead-light">
       <tr>
-
+        <th class="text-center">Action</th>      
         <th>Titre</th>
         <th class="text-center">Etat</th>
         <th>Début</th>
@@ -20,24 +20,33 @@
     {% for line in maintenances %}
     <tr>
 
-      {% if user.is_authenticated %} 
-      <td> 
+    <td class="text-center"> <!-- action -->
+
         <a href="{% url 'app_sirene:info_detail' pk=line.id %}">
-        <i class="fas fa-bullhorn"></i> &nbsp; 
+        <i class="fas fa-book-open"></i> &nbsp; 
         </a>
+
+        {% if user.is_authenticated %} 
+
         <a href="{% url 'app_sirene:info_edit' pk=line.id %}">
         <i class="fas fa-pencil-alt"></i> &nbsp; 
-        <b>{{ line.title }}</b>
         </a>
-      </td>
-      {% else %}
-      <td>
+
         <a href="{% url 'app_sirene:info_detail' pk=line.id %}">
         <i class="fas fa-bullhorn"></i> &nbsp; 
+        </a>
+
+        {% endif %}
+
+    </td>
+
+    <td>
+        <a href="{% url 'app_sirene:info_detail' pk=line.id %}">
         <b>{{ line.title }}</b>
         </a>
-      </td>
-      {% endif %}
+    </td>
+
+
 
       <td class="text-center">{{ line.get_status_display }}</td>
       <td>{{ line.start|date:"Y/m/d H:i:s" }}</td>

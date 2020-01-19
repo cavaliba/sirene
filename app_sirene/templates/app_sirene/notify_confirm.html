@@ -1,0 +1,39 @@
+{% extends "app_sirene/base_nosidebar.html" %}
+{% block content %}
+
+<p>
+<h5>Envoi de notifications ?</h5>
+<p>
+
+
+<hr>
+TYPE: {{ item.get_category_display }}<br>
+TITRE : {{ item.title }}<br>
+PRIORITE : {{ item.get_priority_display }}<br>
+DETAIL : 
+<pre>
+{{ item.detail }}
+</pre>
+<hr>
+NOMBRE DE SMS : {{ num_sms }}<br>
+NOMBRE D'EMAILS : {{ num_email }}<br>
+<hr>
+
+
+
+<a href="{% url 'app_sirene:notify_send' item.pk %}">
+<button type="button" class="btn btn-danger btn-sm mr-3">
+ <i class="fas fa-bullhorn"></i> &nbsp; OUI - Envoyer mails et SMS
+</button>
+</a>
+
+
+<a href="{% url 'app_sirene:home'  %}">
+<button type="button" class="btn btn-primary btn-sm">
+ <i class="fas fa-times"></i> &nbsp; NON - Pas d'envoi de notification
+</button>
+</a>
+
+
+{%endblock%}
+
